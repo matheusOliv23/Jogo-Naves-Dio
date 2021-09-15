@@ -5,12 +5,16 @@ function start() {
   $('#fundoGame').append("<div id='inimigo1' class='anima2'></div>")
   $('#fundoGame').append("<div id='inimigo2'></div>")
   $('#fundoGame').append("<div id='amigo' class='anima3'></div>")
+  $('#fundoGame').append("<div id='placar'></div>")
 
   var jogo = {}
   var velocidade = 5
   var posicaoY = parseInt(Math.random() * 334)
   var podeAtirar = true
   var fimdejogo = false
+  var pontos = 0
+  var salvos = 0
+  var perdidos = 0
   var TECLA = {
     W: 87,
     S: 83,
@@ -37,6 +41,7 @@ function start() {
     moveamigo()
     colisao()
     explosao1()
+    placar()
   }
 
   function movefundo() {
@@ -153,7 +158,7 @@ function start() {
     if (colisao3.length > 0) {
       inimigo1X = parseInt($('#inimigo1').css('left'))
       inimigo1Y = parseInt($('#inimigo1').css('top'))
-
+      pontos += 100
       explosao1(inimigo1X, inimigo1Y)
       $('#disparo').css('left', 950)
 
@@ -165,6 +170,7 @@ function start() {
       inimigo2X = parseInt($('#inimigo2').css('left'))
       inimigo2Y = parseInt($('#inimigo2').css('top'))
       $('#inimigo2').remove()
+      pontos += 50
 
       explosao2(inimigo2X, inimigo2Y)
       $('#disparo').css('left', 950)
@@ -172,12 +178,16 @@ function start() {
       reposicionaInimigo2()
     }
     if (colisao5.length > 0) {
+      salvos++
       reposicionaAmigo()
       $('#amigo').remove()
     }
     if (colisao6.length > 0) {
       amigoX = parseInt($('#amigo').css('left'))
       amigoY = parseInt($('#amigo').css('top'))
+
+      perdidos++
+
       explosao3(amigoX, amigoY)
       $('#amigo').remove()
 
@@ -251,5 +261,16 @@ function start() {
         $('#fundoGame').append("<div id='amigo' class='anima3'></div>")
       }
     }
+  }
+  function placar() {
+    $('#placar').html(
+      '<h2> Pontos: ' +
+        pontos +
+        ' Salvos: ' +
+        salvos +
+        ' Perdidos: ' +
+        perdidos +
+        '</h2>'
+    )
   }
 }
