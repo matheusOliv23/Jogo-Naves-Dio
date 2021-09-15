@@ -8,6 +8,25 @@ function start() {
   $('#fundoGame').append("<div id='placar'></div>")
   $('#fundoGame').append("<div id='energia'></div>")
 
+  //SONS DO JOGO
+  var somDisparo = document.getElementById('somDisparo')
+  var somExplosao = document.getElementById('somExplosao')
+  var musica = document.getElementById('musica')
+  var somGameover = document.getElementById('somGameover')
+  var somPerdido = document.getElementById('somPerdido')
+  var somResgate = document.getElementById('somResgate')
+
+  musica.addEventListener(
+    'ended',
+    function () {
+      musica.currentTime = 0
+      musica.play()
+    },
+    false
+  )
+  musica.play()
+
+  //VARIÁVEIS PRINCIPAIS
   var jogo = {}
   var velocidade = 5
   var posicaoY = parseInt(Math.random() * 334)
@@ -106,6 +125,8 @@ function start() {
   }
 
   function disparo() {
+    somDisparo.play()
+
     if (podeAtirar == true) {
       podeAtirar = false
 
@@ -164,6 +185,7 @@ function start() {
       inimigo1X = parseInt($('#inimigo1').css('left'))
       inimigo1Y = parseInt($('#inimigo1').css('top'))
       pontos += 100
+      velocidade += 0.3
       explosao1(inimigo1X, inimigo1Y)
       $('#disparo').css('left', 950)
 
@@ -186,6 +208,7 @@ function start() {
       salvos++
       reposicionaAmigo()
       $('#amigo').remove()
+      somResgate.play()
     }
     if (colisao6.length > 0) {
       amigoX = parseInt($('#amigo').css('left'))
@@ -206,6 +229,7 @@ function start() {
     div.css('top', inimigo1Y)
     div.css('left', inimigo1X)
     div.animate({ width: 200, opacity: 0 }, 'slow')
+    somExplosao.play()
 
     var tempoExplosao = window.setInterval(removeExplosao, 1000)
 
@@ -222,6 +246,7 @@ function start() {
     div2.css('top', inimigo2Y)
     div2.css('left', inimigo2X)
     div2.animate({ width: 200, opacity: 0 }, 'slow')
+    somExplosao.play()
 
     var tempoExplosao2 = window.setInterval(removeExplosao2, 1000)
 
@@ -241,6 +266,8 @@ function start() {
       window.clearInterval(tempoExplosao3)
       tempoExplosao3 = null
     }
+
+    somPerdido.play()
   }
   function reposicionaInimigo2() {
     var tempoColisao4 = window.setInterval(reposiciona4, 5000)
@@ -294,7 +321,36 @@ function start() {
     if (energiaAtual == 0) {
       $('#energia').css('background-image', 'url(imgs/energia0.png)')
 
-      //Game Over
+      gameOver()
     }
   }
+
+  function gameOver() {
+    fimdejogo = true
+    musica.pause()
+    somGameover.play()
+
+    window.clearInterval(jogo.timer)
+    jogo.timer = null
+
+    $('#jogador').remove()
+    $('#inimigo1').remove()
+    $('#inimigo2').remove()
+    $('#amigo').remove()
+
+    $('#fundoGame').append("<div id='fim'></div>")
+
+    $('#fim').html(
+      '<h1> Game Over </h1><p>Sua pontuação foi: ' +
+        pontos +
+        '</p>' +
+        "<div id='reinicia' onClick=reiniciaJogo()><h3>Jogar Novamente</h3></div>"
+    )
+  }
+}
+
+function reiniciaJogo() {
+  somGameover.pause()
+  $('#fim').remove()
+  start()
 }
