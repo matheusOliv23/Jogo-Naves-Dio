@@ -173,6 +173,13 @@ animation:play2 .9s steps(12) infinite;
        -o-animation: play2 .9s steps(12) infinite;
 }
 
+#disparo {
+	width: 50px;
+	height: 8px;
+	position: absolute;
+	background-image: url(../imgs/disparo.png);
+}
+
 @keyframes play2 {
 from {background-position:0px;}
 to {background-position:-528px;}
